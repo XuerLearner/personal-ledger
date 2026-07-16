@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f3ed">
+  <title>钱迹 · 个人账簿</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">PERSONAL LEDGER</p>
+        <h1 id="pageTitle">钱从哪里来，又到哪里去？</h1>
+      </div>
+      <button class="icon-button" id="themeShortcut" aria-label="切换深色模式">◐</button>
+    </header>
+
+    <main>
+      <section class="page active" id="ledgerPage" data-page="ledger">
+        <article class="balance-card">
+          <p>本月结余</p>
+          <strong id="monthBalance">¥0.00</strong>
+          <div class="balance-grid">
+            <span>收入 <b id="monthIncome">¥0.00</b></span>
+            <span>支出 <b id="monthExpense">¥0.00</b></span>
+          </div>
+        </article>
+        <div class="section-heading">
+          <div><p class="eyebrow">RECENT</p><h2>最近明细</h2></div>
+          <button class="text-button" data-nav="query">查看全部</button>
+        </div>
+        <div class="transaction-list" id="recentList"></div>
+      </section>
+
+      <section class="page" id="queryPage" data-page="query">
+        <div class="mode-tabs" role="tablist">
+          <button class="active" data-query-mode="detail">明细查询</button>
+          <button data-query-mode="stats">快速统计</button>
+        </div>
+        <div id="detailPanel">
+          <form class="filter-card" id="filterForm">
+            <label>开始日期<input type="date" id="startDate"></label>
+            <label>结束日期<input type="date" id="endDate"></label>
+            <label>标签<select id="filterTag"><option value="">全部标签</option></select></label>
+            <button class="primary-button" type="submit">查询明细</button>
+          </form>
+          <div class="transaction-list" id="queryList"></div>
+        </div>
+        <div id="statsPanel" hidden>
+          <div class="period-switch" id="periodSwitch">
+            <button data-period="week">本周</button><button class="active" data-period="month">本月</button><button data-period="year">本年</button><button data-period="custom">自定义</button>
+          </div>
+          <div class="custom-range" id="customRange" hidden><input type="date" id="statsStart"><span>至</span><input type="date" id="statsEnd"></div>
+          <div class="stats-grid"><article><span>收入</span><strong class="income" id="statsIncome">¥0.00</strong></article><article><span>支出</span><strong class="expense" id="statsExpense">¥0.00</strong></article></div>
+          <article class="category-card"><h3>按标签汇总</h3><div id="categoryStats"></div></article>
+        </div>
+      </section>
+
+      <section class="page" id="profilePage" data-page="profile">
+        <article class="profile-card"><div class="avatar">账</div><div><h2>记账人</h2><p>认真生活，也认真记录</p></div></article>
+        <div class="settings-card">
+          <label class="setting-row"><span>深色模式</span><input type="checkbox" id="darkMode" class="switch"></label>
+          <label class="setting-row"><span>语言</span><select id="language"><option>简体中文</option></select></label>
+          <button class="setting-row" id="changePassword"><span>修改密码</span><b>›</b></button>
+          <button class="setting-row danger" id="logout"><span>退出登录</span><b>›</b></button>
+        </div>
+      </section>
+    </main>
+
+    <button class="fab" id="addButton" aria-label="添加账目">＋</button>
+    <nav class="bottom-nav" aria-label="主导航">
+      <button class="active" data-nav="ledger"><span>⌂</span>记账</button>
+      <button data-nav="query"><span>⌕</span>查账</button>
+      <button data-nav="profile"><span>♙</span>我的</button>
+    </nav>
+  </div>
+
+  <div class="modal" id="entryModal" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="entryTitle">
+      <div class="sheet-handle"></div><div class="sheet-head"><h2 id="entryTitle">记一笔</h2><button class="icon-button" data-close-modal>×</button></div>
+      <form id="entryForm">
+        <div class="type-switch"><label><input type="radio" name="type" value="expense" checked><span>支出</span></label><label><input type="radio" name="type" value="income"><span>收入</span></label></div>
+        <label class="amount-field"><span>¥</span><input id="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00" required></label>
+        <div class="form-grid"><label>日期<input id="entryDate" type="date" required></label><label>标签<select id="entryTag"><option>饮食</option><option>交通</option><option>住房</option><option>衣装</option><option>爱好</option><option>游玩</option><option>工资</option><option>其他</option></select></label></div>
+        <label>备注（可选）<input id="note" maxlength="50" placeholder="写点什么…"></label>
+        <button class="primary-button" type="submit">保存账目</button>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
