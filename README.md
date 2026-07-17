@@ -48,3 +48,5 @@
 - 本地开发时通过 Live Server 运行，并在 Authentication URL Configuration 中配置正确地址
 
 找回密码和账目编辑界面尚未实现。
+
+目前版本为 v2
