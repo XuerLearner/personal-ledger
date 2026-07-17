@@ -8,7 +8,35 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-shell">
+  <section class="auth-view" id="authView">
+    <button class="icon-button auth-theme-button" id="authThemeShortcut" aria-label="切换深色模式">◐</button>
+    <div class="auth-card">
+      <div class="auth-brand">
+        <span class="auth-logo">钱</span>
+        <p class="eyebrow">PERSONAL LEDGER</p>
+        <h1>开始记录你的每一笔</h1>
+        <p>钱从哪里来，又到哪里去？</p>
+      </div>
+      <div class="mode-tabs auth-tabs" role="tablist" aria-label="账户操作">
+        <button class="active" type="button" data-auth-mode="login">登录</button>
+        <button type="button" data-auth-mode="register">注册</button>
+      </div>
+      <form class="auth-form" id="loginForm">
+        <label>邮箱<input id="loginEmail" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+        <label>密码<input id="loginPassword" type="password" autocomplete="current-password" minlength="6" placeholder="请输入密码" required></label>
+        <button class="primary-button" type="submit">登录</button>
+      </form>
+      <form class="auth-form" id="registerForm" hidden>
+        <label>用户名<input id="registerUsername" autocomplete="username" minlength="2" maxlength="30" placeholder="2～30个字符" required></label>
+        <label>邮箱<input id="registerEmail" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+        <label>密码<input id="registerPassword" type="password" autocomplete="new-password" minlength="6" placeholder="至少6位" required></label>
+        <button class="primary-button" type="submit">创建账户</button>
+      </form>
+      <p class="auth-message" id="authMessage" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <div class="app-shell" id="appView" hidden>
     <header class="topbar">
       <div>
         <p class="eyebrow">PERSONAL LEDGER</p>
@@ -59,7 +87,7 @@
       </section>
 
       <section class="page" id="profilePage" data-page="profile">
-        <article class="profile-card"><div class="avatar">账</div><div><h2>记账人</h2><p>认真生活，也认真记录</p></div></article>
+        <article class="profile-card"><div class="avatar" id="profileAvatar">账</div><div><h2 id="profileName">记账人</h2><p id="profileEmail">认真生活，也认真记录</p></div></article>
         <div class="settings-card">
           <label class="setting-row"><span>深色模式</span><input type="checkbox" id="darkMode" class="switch"></label>
           <label class="setting-row"><span>语言</span><select id="language"><option>简体中文</option></select></label>
@@ -91,6 +119,7 @@
     </section>
   </div>
   <div class="toast" id="toast" role="status"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
 </body>
 </html>

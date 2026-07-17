@@ -17,6 +17,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -38,6 +42,97 @@ body.dark {
   --shadow: 0 14px 40px rgba(0,0,0,.28);
   color-scheme: dark;
   background-image: none;
+}
+
+.auth-view {
+  width: min(100%,480px);
+  min-height: 100dvh;
+  margin: auto;
+  padding: 28px 20px;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.auth-theme-button {
+  position: absolute;
+  right: 20px;
+  top: 24px;
+}
+
+.auth-card {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 30px 24px;
+  box-shadow: var(--shadow);
+}
+
+.auth-brand {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.auth-logo {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  color: #fff;
+  background: linear-gradient(135deg,#254f3c,#3e765c);
+  font-family: Georgia,"Songti SC",serif;
+  font-size: 25px;
+  box-shadow: 0 10px 24px rgba(39,103,73,.24);
+}
+
+.auth-brand h1 {
+  margin: 0 0 8px;
+  font-family: Georgia,"Songti SC",serif;
+  font-size: 25px;
+}
+
+.auth-brand>p:last-child {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.auth-tabs {
+  margin-bottom: 20px;
+}
+
+.auth-form {
+  display: grid;
+  gap: 15px;
+}
+
+.auth-form .primary-button {
+  margin-top: 4px;
+}
+
+.auth-form button:disabled {
+  cursor: wait;
+  opacity: .65;
+}
+
+.auth-message {
+  min-height: 18px;
+  margin: 15px 2px 0;
+  color: var(--muted);
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.auth-message.error {
+  color: var(--expense);
+}
+
+.auth-message.success {
+  color: var(--income);
 }
 
 button,input,select {
