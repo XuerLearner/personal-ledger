@@ -1,6 +1,6 @@
 # 个人账簿 H5
 
-一个基于原生 HTML、CSS 和 JavaScript 实现的移动端个人账簿原型，无需安装依赖或构建。
+一个基于原生 HTML、CSS 和 JavaScript 实现的移动端个人账簿，使用 npm 管理依赖，并由 Vite 提供开发服务器和生产构建。
 
 ## 已实现功能
 
@@ -19,11 +19,33 @@
 
 ## 运行方式
 
-直接使用浏览器打开 `index.html` 即可。也可以在当前目录启动任意静态文件服务器，例如 VS Code Live Server。
+首次获取项目后安装依赖：
+
+```powershell
+npm.cmd install
+```
+
+复制 `.env.example` 为 `.env.local`，填写 Supabase Project URL 和 Publishable Key，然后启动开发服务器：
+
+```powershell
+npm.cmd run dev
+```
+
+生产构建与本地预览：
+
+```powershell
+npm.cmd run build
+npm.cmd run preview
+```
+
+不要再通过 `file:///...` 直接打开 `index.html`，也不需要使用 Live Server。
 
 ## 文件结构
 
 ```text
+├── .env.example      环境变量示例
+├── .gitignore        Git 忽略规则
+├── package.json      npm 依赖与 Vite 脚本
 ├── index.html        页面结构
 ├── style.css         响应式界面与深色主题
 ├── app.js            认证、Supabase CRUD、迁移、查询与统计逻辑

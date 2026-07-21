@@ -1,11 +1,18 @@
+import { createClient } from '@supabase/supabase-js';
+
 // ============================================================
 // 个人账簿：前端交互与本地数据管理
 // 当前版本没有后端，账目和主题设置均保存在浏览器 localStorage 中。
 // ============================================================
-//Supabase 项目编号和公钥。
-const SUPABASE_URL = 'https://qxcixwvrycrddgdymzhp.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_H15yJp6CZqi_iHfyKv8m2w_4VTE0WHo';
-const supabaseClient = supabase.createClient(
+// Supabase 项目地址和公钥由 Vite 环境变量提供。
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  throw new Error('缺少 Supabase 环境变量，请检查 .env.local');
+}
+
+const supabaseClient = createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
