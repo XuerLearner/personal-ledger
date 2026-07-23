@@ -124,6 +124,16 @@ async function signOut() {
   if (error) throw error;
 }
 
+/** 修改当前账户的显示用户名；数据保存在 Supabase Auth 用户元数据中。 */
+async function updateUsername(username) {
+  if (!currentUser) throw new Error('请先登录');
+  const { data, error } = await supabaseClient.auth.updateUser({
+    data: { username }
+  });
+  if (error) throw error;
+  return data.user;
+}
+
 // ==================== 数据读取与通用工具 ====================
 
 /**
@@ -367,6 +377,20 @@ function showToast(message){ const el=document.querySelector('#toast'); el.textC
 function openModal(){ document.querySelector('#entryDate').value=today(); document.querySelector('#entryModal').hidden=false; setTimeout(()=>document.querySelector('#amount').focus(),100); }
 /** 关闭新增账目弹窗。 */
 function closeModal(){ document.querySelector('#entryModal').hidden=true; }
+/** 打开用户名修改弹窗，并填入当前用户名。 */
+function openUsernameModal(){
+  const input = document.querySelector('#newUsername');
+  input.value = currentUser?.user_metadata?.username?.trim()
+    || currentUser?.email?.split('@')[0]
+    || '';
+  document.querySelector('#usernameModal').hidden = false;
+  setTimeout(() => {
+    input.focus();
+    input.select();
+  }, 100);
+}
+/** 关闭用户名修改弹窗。 */
+function closeUsernameModal(){ document.querySelector('#usernameModal').hidden = true; }
 
 // ==================== 用户操作与事件绑定 ====================
 
@@ -374,7 +398,7 @@ function closeModal(){ document.querySelector('#entryModal').hidden=true; }
 document.addEventListener('click',async event=>{
   // data-nav 同时用于底部导航和首页“查看全部”。
   const nav=event.target.closest('[data-nav]'); if(nav) navigate(nav.dataset.nav);
-  if(event.target.closest('#addButton')) openModal(); if(event.target.closest('[data-close-modal]')) closeModal();
+  if(event.target.closest('#addButton')) openModal(); if(event.target.closest('[data-close-modal]')) closeModal(); if(event.target.closest('[data-close-username-modal]')) closeUsernameModal();
   // 删除前确认，成功后保存数据并刷新界面。
   const del=event.target.closest('[data-delete]');
   if(del && confirm('确定删除这笔账目吗？')) {
@@ -476,13 +500,41 @@ document.querySelector('#registerForm').addEventListener('submit', async event =
     setAuthSubmitting(form, false);
   }
 });
+// 修改用户名并立即刷新“我的”页面；用户名只作为昵称，不改变登录邮箱。
+document.querySelector('#usernameForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const submitButton = form.querySelector('button[type="submit"]');
+  const username = document.querySelector('#newUsername').value.trim();
+  if (username.length < 2 || username.length > 30) {
+    showToast('用户名应为2～30个字符');
+    return;
+  }
+
+  submitButton.disabled = true;
+  submitButton.textContent = '保存中…';
+  try {
+    const user = await updateUsername(username);
+    currentUser = user;
+    applyAuthSession({ user });
+    closeUsernameModal();
+    showToast('用户名已修改');
+  } catch (error) {
+    console.error(error);
+    showToast('修改失败：' + authErrorMessage(error));
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = '保存用户名';
+  }
+});
 // 提交查询表单时按当前条件重新筛选。
 document.querySelector('#filterForm').addEventListener('submit',event=>{event.preventDefault();renderFiltered();});
 // 自定义日期改变时立即更新统计。
 document.querySelectorAll('#statsStart,#statsEnd').forEach(el=>el.addEventListener('change',renderStats));
 // “我的”页面和顶部快捷按钮都可以切换主题。
 document.querySelector('#darkMode').addEventListener('change',event=>setTheme(event.target.checked)); document.querySelector('#themeShortcut').addEventListener('click',()=>setTheme(!document.body.classList.contains('dark'))); document.querySelector('#authThemeShortcut').addEventListener('click',()=>setTheme(!document.body.classList.contains('dark')));
-// 修改密码留待后续实现；退出登录已经连接 Supabase Auth。
+// 用户名保存在 Supabase Auth 元数据中；修改密码留待后续实现。
+document.querySelector('#changeUsername').addEventListener('click', openUsernameModal);
 document.querySelector('#changePassword').addEventListener('click',()=>showToast('修改密码功能将在下一步实现'));
 document.querySelector('#logout').addEventListener('click',async()=>{
   try {
